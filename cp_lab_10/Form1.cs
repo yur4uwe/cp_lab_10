@@ -43,28 +43,34 @@ namespace cp_lab_10
             X0 = new double[N];
             X = new double[N];
 
-            for (int i = 1; i <= N; i++)
+            for (int i = 0; i < N; i++)
             {
-                object cellVal = inputGridView.Rows[i - 1].Cells[colIndex].Value;
+                object cellVal = inputGridView.Rows[i].Cells[colIndex].Value;
                 string s = cellVal?.ToString();
                 double parsed;
                 if (!double.TryParse(s, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out parsed))
                 {
-                    MessageBox.Show($"Invalid input at row {i}. Enter a valid number.");
+                    MessageBox.Show($"Invalid input at row {i+1}. Enter a valid number.");
                     return;
                 }
                 X0[i] = parsed;
             }
 
             var solver = new Solver(N);
-            int iterations;
             try
             {
-                double[] result = solver.Solve(X0, eps, maxIter, out iterations);
-                iterLabel.Text = "Iterations elapsed: " + iterations.ToString(CultureInfo.InvariantCulture);
+                double[] result = solver.Solve(X0, eps, maxIter);
+
+                var newtonIter = solver.LastGaussIterations;
+                var luIter = solver.LastLUIterations;
+
+                iterLabel.Text = "Iterations elapsed for Newton: " + newtonIter.ToString(CultureInfo.InvariantCulture) + "" +
+                    " And: " + luIter + " for LU";
 
                 for (int i = 0; i < N; i++)
                     outputGridView[0, i].Value = result[i + 1].ToString(CultureInfo.InvariantCulture);
+
+
                 MessageBox.Show("Розв'язок СНР знайдено");
             }
             catch (Exception ex)
