@@ -46,6 +46,75 @@ namespace cp_lab_10
             return Ja;
         }
 
+        public double[] LUDecomposition(double[,] A, double[] b, out double[,] C)
+        {
+            if (A == null) throw new ArgumentNullException(nameof(A));
+            if (b == null) throw new ArgumentNullException(nameof(b));
+
+            int n = A.GetLength(0);
+            if (A.GetLength(1) != n) throw new ArgumentException("Matrix A must be square.", nameof(A));
+            if (b.Length != n) throw new ArgumentException("Vector b length must match matrix dimension.", nameof(b));
+
+            double[,] L = new double[n, n];
+            double[,] U = new double[n, n];
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = i; j < n; j++)
+                {
+                    double sum = 0.0;
+                    for (int k = 0; k < i; k++)
+                        sum += L[i, k] * U[k, j];
+
+                    U[i, j] = A[i, j] - sum;
+                }
+
+                if (Math.Abs(U[i, i]) < 1e-12)
+                    throw new InvalidOperationException($"Zero (or nearly zero) pivot encountered at U[{i},{i}]. Matrix may be singular or require pivoting.");
+
+                L[i, i] = 1.0;
+                for (int j = i + 1; j < n; j++)
+                {
+                    double sum = 0.0;
+                    for (int k = 0; k < i; k++)
+                        sum += L[j, k] * U[k, i];
+
+                    L[j, i] = (A[j, i] - sum) / U[i, i];
+                }
+            }
+
+            C = new double[n, n];
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (j >= i) C[i, j] = U[i, j];
+                    else C[i, j] = L[i, j];
+                }
+            }
+
+            double[] y = new double[n];
+            for (int i = 0; i < n; i++)
+            {
+                double sum = 0.0;
+                for (int k = 0; k < i; k++)
+                    sum += L[i, k] * y[k];
+                y[i] = b[i] - sum;
+            }
+
+            double[] x = new double[n];
+            for (int i = n - 1; i >= 0; i--)
+            {
+                double sum = 0.0;
+                for (int k = i + 1; k < n; k++)
+                    sum += U[i, k] * x[k];
+
+                x[i] = (y[i] - sum) / U[i, i];
+            }
+
+            return x;
+        }
+
         // Gaussian elimination with partial pivoting, 1-based indexing
         // Solves A * x = b and stores result in x (x must be length N+1)
         private void Gauss(double[,] A, double[] b, double[] x)
