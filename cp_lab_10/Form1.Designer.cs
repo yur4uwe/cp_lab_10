@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
             this.inputGridView = new System.Windows.Forms.DataGridView();
             this.outputGridView = new System.Windows.Forms.DataGridView();
             this.epsTextBox = new System.Windows.Forms.TextBox();
@@ -40,29 +38,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.iterLabel = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.inputGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputGridView)).BeginInit();
             this.SuspendLayout();
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.numericUpDown1.Location = new System.Drawing.Point(174, 20);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 26);
-            this.numericUpDown1.TabIndex = 0;
-            this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(21, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(123, 20);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Choose the size";
             // 
             // inputGridView
             // 
@@ -120,6 +98,7 @@
             this.clearButton.TabIndex = 7;
             this.clearButton.Text = "Clear";
             this.clearButton.UseVisualStyleBackColor = true;
+            this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
             // 
             // exitButton
             // 
@@ -130,6 +109,7 @@
             this.exitButton.TabIndex = 8;
             this.exitButton.Text = "Exit";
             this.exitButton.UseVisualStyleBackColor = true;
+            this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
             // 
             // label2
             // 
@@ -175,11 +155,8 @@
             this.Controls.Add(this.epsTextBox);
             this.Controls.Add(this.outputGridView);
             this.Controls.Add(this.inputGridView);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.numericUpDown1);
             this.Name = "Form1";
             this.Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.inputGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputGridView)).EndInit();
             this.ResumeLayout(false);
@@ -188,9 +165,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView inputGridView;
         private System.Windows.Forms.DataGridView outputGridView;
         private System.Windows.Forms.TextBox epsTextBox;
