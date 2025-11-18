@@ -15,6 +15,8 @@ namespace cp_lab_10
         public int LastGaussIterations { get; private set; }
         public int LastLUIterations { get; private set; }
 
+        
+
         // New ctor accepts an array of function delegates; dimension is derived from its length
         public Solver(Func<double[], double>[] functions)
         {
@@ -51,8 +53,7 @@ namespace cp_lab_10
             if (X == null) throw new ArgumentNullException(nameof(X));
             if (X.Length < N) throw new ArgumentException("X length must be >= N", nameof(X));
 
-            double[] Xcopy = new double[N];
-            Array.Copy(X, Xcopy, N);
+            double[] Xcopy = (double[])X.Clone();
 
             FM(Xcopy, F);
             double h = 1e-6;
@@ -208,21 +209,16 @@ namespace cp_lab_10
 
             // --- 1) Original approach: recompute Jacob each iteration and solve with Gauss ---
             LastGaussIterations = 0;
-            double[] Xgauss = new double[N];
-            for (int i = 0; i < N; i++) Xgauss[i] = X0[i];
-
-            double[,] Atemp = new double[N, N];
+            double[] Xgauss = (double[])X0.Clone();
 
             for (int k = 1; k <= maxIter; k++)
             {
                 FM(Xgauss, F);
                 Jacob(Xgauss);
-                for (int i = 0; i < N; i++)
-                    for (int j = 0; j < N; j++)
-                        Atemp[i, j] = Ja[i, j];
+                double[,] JaCopy = (double[,])Ja.Clone();
 
                 for (int i = 0; i < N; i++) Dx[i] = 0.0;
-                Gauss(Atemp, F, Dx);
+                Gauss(JaCopy, F, Dx);
 
                 double dxmax = 0.0;
                 for (int i = 0; i < N; i++)
@@ -247,16 +243,11 @@ namespace cp_lab_10
                 Jacob(Xcopy); // fills Ja and F for Xcopy
 
                 int n = N;
-                double[,] A0 = new double[n, n];
-                for (int i = 0; i < n; i++)
-                    for (int j = 0; j < n; j++)
-                        A0[i, j] = Ja[i, j];
+                double[,] JaCopy = (double[,])Ja.Clone();
 
-                double[] b0 = new double[n];
-                for (int i = 0; i < n; i++) b0[i] = F[i];
+                double[] b0 = (double[])F.Clone();
 
-                double[,] C;
-                LUDecomposition(A0, b0, out C);
+                LUDecomposition(JaCopy, b0, out double[,] C);
 
                 double[] Xlu = new double[N];
                 for (int i = 0; i < N; i++) Xlu[i] = X0[i];
